@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مستر زياد محمد - EduCore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #183764;
+            --secondary: #F59239;
+            --accent: #4BBBA0;
+            --light: #FFF2DB;
+            --grey: #B3B4B5;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #2a5080 50%, var(--primary) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), #2a4d7a);
+            color: white;
+            padding: 40px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            background: white;
+            padding: 50px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .session-widget {
+            background: linear-gradient(135deg, rgba(24, 55, 100, 0.9), rgba(42, 77, 122, 0.9));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .session-widget.show {
+            display: flex;
+        }
+
+        .session-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .session-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .session-dot.active { background: var(--success); }
+        .session-dot.pending { background: var(--warning); }
+        .session-dot.inactive { background: var(--danger); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+        }
+
+        .user-type-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .user-type-card {
+            background: linear-gradient(135deg, var(--light), #fff);
+            border: 3px solid transparent;
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .user-type-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(245, 146, 57, 0.3);
+            border-color: var(--secondary);
+        }
+
+        .user-type-card.selected {
+            border-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(245, 146, 57, 0.15), rgba(75, 187, 160, 0.1));
+        }
+
+        .user-type-card .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .user-type-card h3 {
+            color: var(--primary);
+            font-size: 1.3em;
+            margin-bottom: 8px;
+        }
+
+        .registration-form {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .registration-form.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            background: linear-gradient(135deg, rgba(255, 242, 219, 0.3), rgba(75, 187, 160, 0.05));
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--accent);
+        }
+
+        .form-section-title {
+            color: var(--primary);
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section-title .number {
+            background: var(--secondary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        label .required {
+            color: var(--secondary);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--grey);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(75, 187, 160, 0.1);
+        }
+
+        input:disabled {
+            background: #f5f5f5;
+        }
+
+        small {
+            color: var(--grey);
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), #e67d1f);
+            color: white;
+            box-shadow: 0 5px 15px rgba(245, 146, 57, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent), #3a9d85);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-grey {
+            background: var(--grey);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert-box {
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: none;
+            animation: slideDown 0.4s;
+        }
+
+        .alert-box.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, var(--success), #27ae60);
+            color: white;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, var(--danger), #c0392b);
+            color: white;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, var(--warning), #e67e22);
+            color: white;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 5px solid var(--light);
+            border-top: 5px solid var(--secondary);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, rgba(75, 187, 160, 0.15), rgba(255, 242, 219, 0.5));
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+            border: 3px solid var(--accent);
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 18px;
+            margin-bottom: 12px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .result-value {
+            color: var(--grey);
+        }
+
+        .token-display {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .token-display pre {
+            margin: 0;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .info-note {
+            background: rgba(245, 146, 57, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            color: var(--primary);
+            margin-top: 25px;
+            border-right: 5px solid var(--secondary);
+        }
+
+        .pending-info {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(255, 242, 219, 0.3));
+            border: 3px solid var(--warning);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .pending-info.show {
+            display: block;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .back-btn {
+            background: var(--grey);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .back-btn.show {
+            display: inline-block;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 30px;
+            margin-top: 12px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 12px 20px;
+            background: var(--light);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .radio-group label:hover {
+            background: rgba(245, 146, 57, 0.15);
+        }
+
+        .file-upload {
+            border: 3px dashed var(--grey);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--accent);
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        input.error, select.error {
+            border-color: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px;
+            }
+
+            .user-type-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .session-widget {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Session Widget -->
+    <div class="session-widget" id="sessionWidget">
+        <div class="session-status">
+            <div class="session-dot" id="sessionDot"></div>
+            <div>
+                <strong id="sessionRole">جارٍ التحقق...</strong>
+                <div style="font-size: 0.9em; opacity: 0.8;" id="sessionPhone"></div>
+            </div>
+        </div>
+        <div>
+            <button onclick="checkSession()" style="background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; margin-left: 10px;">
+                🔄 فحص الجلسة
+            </button>
+            <button onclick="logout()" style="background: var(--grey); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer;">
+                🚪 خروج
+            </button>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>🎓 منصة مستر زياد محمد</h1>
+        <p class="subtitle">منصة تعليمية متكاملة للمرحلة الثانوية</p>
+        <p style="font-size: 0.85em; opacity: 0.7; margin-top: 10px;">Powered by EduCore Solutions ©</p>
+    </div>
+
+    <div class="content">
+        <div id="alert" class="alert-box"></div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p style="color: var(--primary); font-weight: bold;">جاري المعالجة...</p>
+        </div>
+
+        <button class="back-btn" id="backBtn" onclick="backToSelection()">
+            ↩ العودة لاختيار نوع المستخدم
+        </button>
+
+        <!-- User Type Selection -->
+        <div id="userTypeSection">
+            <h2 class="section-title">اختر نوع الحساب</h2>
+            <div class="user-type-cards">
+                <div class="user-type-card" onclick="selectUserType('student')">
+                    <div class="icon">👨‍🎓</div>
+                    <h3>تسجيل طالب جديد</h3>
+                    <p>تسجيل حساب جديد</p>
+                </div>
+
+                <div class="user-type-card" onclick="selectUserType('studentlogin')">
+                    <div class="icon">🔐</div>
+                    <h3>تسجيل دخول طالب</h3>
+                    <p>دخول حساب الطالب</p>
+                </div>
+
+                <div class="user-type-card" onclick="selectUserType('parent')">
+                    <div class="icon">👨‍👩‍👧‍👦</div>
+                    <h3>ولي أمر</h3>
+                    <p>دخول ولي الأمر</p>
+                </div>
+
+                <div class="user-type-card" onclick="selectUserType('teacher')">
+                    <div class="icon">👨‍🏫</div>
+                    <h3>معلم</h3>
+                    <p>دخول المعلم</p>
+                </div>
+
+                <div class="user-type-card" onclick="selectUserType('advanced')">
+                    <div class="icon">⚙️</div>
+                    <h3>أدوات متقدمة</h3>
+                    <p>إدارة الجلسات</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Registration Form -->
+        <div id="studentForm" class="registration-form">
+            <h2 class="section-title">تسجيل طالب جديد</h2>
+
+            <form id="registrationForm" onsubmit="handleStudentRegistration(event)">
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span class="number">1</span>
+                        <span>البيانات الشخصية</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الاسم الرباعي <span class="required">*</span></label>
+                        <div class="form-grid">
+                            <input type="text" id="firstName" required placeholder="الاسم الأول">
+                            <input type="text" id="secondName" placeholder="الاسم الثاني">
+                            <input type="text" id="thirdName" placeholder="الاسم الثالث">
+                            <input type="text" id="fourthName" placeholder="الاسم الرابع">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>رقم هاتف الطالب <span class="required">*</span></label>
+                            <input type="tel" id="studentPhone" required placeholder="01012345678" maxlength="11">
+                            <small>يجب أن يبدأ بـ 01</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>رقم هاتف ولي الأمر <span class="required">*</span></label>
+                            <input type="tel" id="parentPhone" required placeholder="01012345678" maxlength="11">
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" onclick="startStudentRegistration()" id="sendOtpBtn">
+                        📱 إرسال رمز التحقق
+                    </button>
+
+                    <div class="form-grid" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label>رمز التحقق (OTP) <span class="required">*</span></label>
+                            <input type="number" id="studentOtp" required placeholder="123456" maxlength="6">
+                            <small>تحقق من Console</small>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>كلمة المرور <span class="required">*</span></label>
+                            <input type="password" id="password" required minlength="6">
+                        </div>
+
+                        <div class="form-group">
+                            <label>تأكيد كلمة المرور <span class="required">*</span></label>
+                            <input type="password" id="confirmPassword" required minlength="6">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span class="number">2</span>
+                        <span>البيانات الأكاديمية</span>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>الصف الدراسي <span class="required">*</span></label>
+                            <select id="grade" required>
+                                <option value="">اختر الصف</option>
+                                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>المحافظة <span class="required">*</span></label>
+                            <select id="governorate" required onchange="loadAreas()">
+                                <option value="">اختر المحافظة</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>المنطقة <span class="required">*</span></label>
+                            <select id="area" required>
+                                <option value="">اختر المنطقة</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>اسم المدرسة <span class="required">*</span></label>
+                            <input type="text" id="schoolName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الإدارة التعليمية</label>
+                        <input type="text" id="educationDepartment">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span class="number">3</span>
+                        <span>نوع الدراسة</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>اختر نوع الدراسة <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="studyType" value="online" checked>
+                                💻 أونلاين
+                            </label>
+                            <label>
+                                <input type="radio" name="studyType" value="center">
+                                🏢 حضور في مركز
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="centerField" style="display: none;">
+                        <label>اسم المركز <span class="required">*</span></label>
+                        <select id="centerName">
+                            <option value="">اختر المركز</option>
+                            <option value="مركز مدينة نصر">مركز مدينة نصر</option>
+                            <option value="مركز التجمع الخامس">مركز التجمع الخامس</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    ✅ إتمام تسجيل الطالب
+                </button>
+            </form>
+
+            <div id="studentResult" class="result-box"></div>
+        </div>
+
+        <!-- Student Login Form -->
+        <div id="studentLoginForm" class="registration-form">
+            <h2 class="section-title">تسجيل دخول الطالب</h2>
+
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>رقم هاتف الطالب <span class="required">*</span></label>
+                        <input type="tel" id="studentLoginPhone" required placeholder="01012345678" maxlength="11">
+                        <div class="error-message" id="studentLoginPhoneError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>كلمة المرور <span class="required">*</span></label>
+                        <input type="password" id="studentLoginPassword" required minlength="6">
+                        <div class="error-message" id="studentLoginPasswordError"></div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="studentLogin()">
+                    🔐 تسجيل دخول الطالب
+                </button>
+            </div>
+
+            <div id="studentLoginResult" class="result-box"></div>
+
+            <div id="pendingAccountInfo" class="pending-info">
+                <h4>🔄 حساب قيد المراجعة</h4>
+                <p>حسابك قيد المراجعة من قبل الإدارة</p>
+                <button class="whatsapp-btn" onclick="contactSupportWhatsApp()">
+                    💬 التواصل عبر واتساب
+                </button>
+            </div>
+        </div>
+
+        <!-- Parent Login Form -->
+        <div id="parentForm" class="registration-form">
+            <h2 class="section-title">تسجيل دخول ولي الأمر</h2>
+
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="number">1</span>
+                    <span>إرسال رمز التحقق</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>رقم هاتف ولي الأمر <span class="required">*</span></label>
+                        <input type="tel" id="parentLoginPhone" required placeholder="01012345678" maxlength="11">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" onclick="startParentLogin()" id="sendParentOtpBtn">
+                            📱 إرسال رمز التحقق
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section" id="parentOtpSection" style="display: none;">
+                <div class="form-section-title">
+                    <span class="number">2</span>
+                    <span>إدخال رمز التحقق</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>رمز التحقق (OTP) <span class="required">*</span></label>
+                        <input type="number" id="parentOtp" required placeholder="123456" maxlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="completeParentLogin()">
+                            ✅ تسجيل الدخول
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="parentResult" class="result-box"></div>
+        </div>
+
+        <!-- Teacher Login Form -->
+        <div id="teacherForm" class="registration-form">
+            <h2 class="section-title">تسجيل دخول المعلم</h2>
+
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>رقم الهاتف <span class="required">*</span></label>
+                        <input type="tel" id="teacherPhone" required placeholder="01012345678" maxlength="11">
+                    </div>
+
+                    <div class="form-group">
+                        <label>كلمة المرور <span class="required">*</span></label>
+                        <input type="password" id="teacherPassword" required minlength="6">
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="teacherLogin()">
+                    👨‍🏫 تسجيل دخول المعلم
+                </button>
+            </div>
+
+            <div id="teacherResult" class="result-box"></div>
+        </div>
+
+        <!-- Advanced Tools Form -->
+        <div id="advancedForm" class="registration-form">
+            <h2 class="section-title">⚙️ أدوات متقدمة</h2>
+
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="number">1</span>
+                    <span>تسجيل خروج قسري</span>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="forceLogoutAll()">
+                    🚪 تسجيل خروج من كل الأجهزة
+                </button>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="number">2</span>
+                    <span>تجديد الجلسة</span>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="refreshToken()">
+                    🔄 تجديد Token
+                </button>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="number">3</span>
+                    <span>التحقق من رقم الهاتف</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <input type="tel" id="checkPhoneInput" placeholder="01012345678" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" onclick="checkPhoneStatus()">
+                            🔍 فحص الرقم
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="number">4</span>
+                    <span>معلومات المستخدم</span>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="getCurrentUserInfo()">
+                    👤 جلب معلومات المستخدم
+                </button>
+            </div>
+
+            <div id="advancedResult" class="result-box"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080/api';
+    let selectedUserType = null;
+    let studentRegistrationPhone = '';
+    let studentOtpSent = false;
+    let parentOtpSent = false;
+    let parentLoginPhone = '';
+    let currentSession = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadGovernorates();
+        checkEntryPoint();
+
+        document.querySelectorAll('input[name="studyType"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const centerField = document.getElementById('centerField');
+                const centerName = document.getElementById('centerName');
+                if (e.target.value === 'center') {
+                    centerField.style.display = 'block';
+                    centerName.required = true;
+                } else {
+                    centerField.style.display = 'none';
+                    centerName.required = false;
+                }
+            });
+        });
+    });
+
+    async function checkEntryPoint() {
+        try {
+            const token = localStorage.getItem('student_token') ||
+                          localStorage.getItem('parent_token') ||
+                          localStorage.getItem('teacher_token');
+
+            const response = await fetch(`${API_URL}/auth/entry-point`, {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Entry Point:', data);
+
+                switch(data.screen) {
+                    case 'PENDING':
+                        showSessionWidget({ hasSession: true, role: 'STUDENT', status: 'PENDING', phone: data.phone });
+                        break;
+                    case 'HOME':
+                        showSessionWidget({ hasSession: true, role: data.role || 'STUDENT', status: 'ACTIVE' });
+                        break;
+                    default:
+                        hideSessionWidget();
+                }
+            }
+        } catch (error) {
+            console.log('Entry point check failed:', error);
+        }
+    }
+
+    function showSessionWidget(sessionData) {
+        const widget = document.getElementById('sessionWidget');
+        const dot = document.getElementById('sessionDot');
+        const role = document.getElementById('sessionRole');
+        const phone = document.getElementById('sessionPhone');
+
+        widget.classList.add('show');
+
+        if (sessionData.role === 'STUDENT') {
+            role.textContent = 'طالب';
+            if (sessionData.status === 'PENDING') {
+                dot.className = 'session-dot pending';
+                phone.textContent = '⏳ قيد المراجعة';
+            } else {
+                dot.className = 'session-dot active';
+                phone.textContent = sessionData.phone || '';
+            }
+        } else if (sessionData.role === 'PARENT') {
+            dot.className = 'session-dot active';
+            role.textContent = 'ولي أمر';
+        } else if (sessionData.role === 'TEACHER') {
+            dot.className = 'session-dot active';
+            role.textContent = 'معلم';
+        }
+    }
+
+    function hideSessionWidget() {
+        document.getElementById('sessionWidget').classList.remove('show');
+    }
+
+    async function checkSession() {
+        const token = localStorage.getItem('student_token') ||
+                      localStorage.getItem('parent_token') ||
+                      localStorage.getItem('teacher_token');
+
+        if (!token) {
+            showAlert('info', 'لا توجد جلسة نشطة');
+            return;
+        }
+
+        showLoading();
+        try {
+            const response = await fetch(`${API_URL}/auth/session-status`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showSessionWidget(data);
+                showAlert('success', '✅ الجلسة نشطة');
+            } else {
+                showAlert('error', '❌ الجلسة منتهية');
+                logout();
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function logout() {
+        const token = localStorage.getItem('student_token') ||
+                      localStorage.getItem('parent_token') ||
+                      localStorage.getItem('teacher_token');
+
+        if (token) {
+            await fetch(`${API_URL}/auth/logout`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+        }
+
+        localStorage.clear();
+        hideSessionWidget();
+        showAlert('success', '✅ تم تسجيل الخروج');
+        backToSelection();
+    }
+
+    function selectUserType(type) {
+        selectedUserType = type;
+        document.querySelectorAll('.registration-form').forEach(f => f.classList.remove('active'));
+        document.getElementById('userTypeSection').style.display = 'none';
+        document.getElementById('backBtn').classList.add('show');
+
+        const forms = {
+            'student': 'studentForm',
+            'studentlogin': 'studentLoginForm',
+            'parent': 'parentForm',
+            'teacher': 'teacherForm',
+            'advanced': 'advancedForm'
+        };
+
+        document.getElementById(forms[type]).classList.add('active');
+    }
+
+    function backToSelection() {
+        document.querySelectorAll('.registration-form').forEach(f => f.classList.remove('active'));
+        document.getElementById('backBtn').classList.remove('show');
+        document.getElementById('userTypeSection').style.display = 'block';
+    }
+
+    async function loadGovernorates() {
+        try {
+            const response = await fetch(`${API_URL}/student/register/governorates`);
+            const governorates = await response.json();
+            const select = document.getElementById('governorate');
+            select.innerHTML = '<option value="">اختر المحافظة</option>';
+            governorates.forEach(gov => {
+                select.innerHTML += `<option value="${gov}">${gov}</option>`;
+            });
+        } catch (error) {
+            console.error('Error loading governorates:', error);
+        }
+    }
+
+    async function loadAreas() {
+        const gov = document.getElementById('governorate').value;
+        if (!gov) return;
+
+        try {
+            const response = await fetch(`${API_URL}/student/register/areas/${encodeURIComponent(gov)}`);
+            const areas = await response.json();
+            const select = document.getElementById('area');
+            select.innerHTML = '<option value="">اختر المنطقة</option>';
+            areas.forEach(area => {
+                select.innerHTML += `<option value="${area}">${area}</option>`;
+            });
+        } catch (error) {
+            console.error('Error loading areas:', error);
+        }
+    }
+
+    async function startStudentRegistration() {
+        const phone = document.getElementById('studentPhone').value.trim();
+        const parentPhone = document.getElementById('parentPhone').value.trim();
+const firstName = document.getElementById('firstName').value.trim(); // أضف هذا السطر
+       if (!firstName) {
+        showAlert('error', '❌ يرجى إدخال الاسم الأول');
+        return;
+    }
+    if (!phone.match(/^01[0-9]{9}$/)) {
+        showAlert('error', '❌ رقم هاتف الطالب غير صحيح');
+        return;
+    }
+
+        showLoading();
+
+       try {
+        // 3. إرسال الطلب إلى السيرفر
+        const response = await fetch(`${API_URL}/student/register/start`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                firstName: firstName,
+                phone: phone,
+                parentPhone: parentPhone
+            })
+        });
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+            showAlert('success', '✅ ' + data.message);
+            studentOtpSent = true;
+            // تعطيل الحقول لمنع التغيير بعد إرسال الكود
+            document.getElementById('studentPhone').disabled = true;
+            document.getElementById('sendOtpBtn').disabled = true;
+            console.log('OTP details:', data);
+        } else {
+            showAlert('error', '❌ ' + (data.error || 'حدث خطأ في إرسال الرمز'));
+        }
+    } catch (error) {
+        hideLoading();
+        showAlert('error', '❌ فشل الاتصال بالسيرفر، تأكد من تشغيل الـ Backend');
+    }
+    }
+
+    async function handleStudentRegistration(event) {
+        event.preventDefault();
+
+        if (!studentOtpSent) {
+            showAlert('error', '❌ يجب إرسال OTP أولاً');
+            return;
+        }
+
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+            showAlert('error', '❌ كلمتا المرور غير متطابقتين');
+            return;
+        }
+
+        showLoading();
+
+        const studyType = document.querySelector('input[name="studyType"]:checked').value;
+
+        const data = {
+            phone: studentRegistrationPhone,
+            parentPhone: document.getElementById('parentPhone').value,
+            otp: parseInt(document.getElementById('studentOtp').value),
+            password: password,
+            confirmPassword: confirmPassword,
+            firstName: document.getElementById('firstName').value,
+            secondName: document.getElementById('secondName').value || null,
+            thirdName: document.getElementById('thirdName').value || null,
+            fourthName: document.getElementById('fourthName').value || null,
+            grade: document.getElementById('grade').value,
+            governorate: document.getElementById('governorate').value,
+            area: document.getElementById('area').value,
+            schoolName: document.getElementById('schoolName').value,
+            educationDepartment: document.getElementById('educationDepartment').value || null,
+            online: studyType === 'online',
+            centerName: studyType === 'center' ? document.getElementById('centerName').value : null
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/student/register/complete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showAlert('success', '🎉 ' + result.message);
+                const resultBox = document.getElementById('studentResult');
+                resultBox.innerHTML = `
+                    <h3>🎉 تم التسجيل بنجاح!</h3>
+                    <div class="result-item">
+                        <span class="result-label">كود الطالب:</span>
+                        <span class="result-value">${result.studentCode}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">الحالة:</span>
+                        <span class="result-value">قيد المراجعة ⏳</span>
+                    </div>
+                `;
+                resultBox.classList.add('show');
+            } else {
+                showAlert('error', '❌ ' + (result.error || 'فشل التسجيل'));
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function studentLogin() {
+        const phone = document.getElementById('studentLoginPhone').value.trim();
+        const password = document.getElementById('studentLoginPassword').value;
+
+        if (!phone.match(/^01[0-9]{9}$/)) {
+            showAlert('error', '❌ رقم هاتف غير صحيح');
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/auth/student/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, password })
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showAlert('success', '✅ تم تسجيل الدخول');
+                localStorage.setItem('student_token', data.token);
+                localStorage.setItem('student_role', 'STUDENT');
+                localStorage.setItem('student_phone', phone);
+
+                const resultBox = document.getElementById('studentLoginResult');
+                resultBox.innerHTML = `
+                    <h3>✅ تم تسجيل الدخول</h3>
+                    <div class="result-item">
+                        <span class="result-label">كود الطالب:</span>
+                        <span class="result-value">${data.studentCode || 'N/A'}</span>
+                    </div>
+                    <div class="token-display">
+                        <button class="copy-btn" onclick="copyToClipboard('studentToken')">نسخ</button>
+                        <pre id="studentToken">${data.token.substring(0, 100)}...</pre>
+                    </div>
+                `;
+                resultBox.classList.add('show');
+
+                showSessionWidget({ hasSession: true, role: 'STUDENT', status: 'ACTIVE', phone });
+            } else {
+                if (data.error && data.error.includes('قيد المراجعة')) {
+                    document.getElementById('pendingAccountInfo').classList.add('show');
+                }
+                showAlert('error', '❌ ' + (data.error || 'فشل تسجيل الدخول'));
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function startParentLogin() {
+        const phone = document.getElementById('parentLoginPhone').value.trim();
+
+        if (!phone.match(/^01[0-9]{9}$/)) {
+            showAlert('error', '❌ رقم هاتف غير صحيح');
+            return;
+        }
+
+        parentLoginPhone = phone;
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/parent/start-login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ parentPhone: phone })
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showAlert('success', '✅ ' + data.message);
+                parentOtpSent = true;
+                document.getElementById('parentLoginPhone').disabled = true;
+                document.getElementById('sendParentOtpBtn').disabled = true;
+                document.getElementById('parentOtpSection').style.display = 'block';
+                console.log('Parent OTP sent');
+            } else {
+                showAlert('error', '❌ ' + (data.message || 'حدث خطأ'));
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function completeParentLogin() {
+        if (!parentOtpSent) {
+            showAlert('error', '❌ يجب إرسال OTP أولاً');
+            return;
+        }
+
+        const otp = document.getElementById('parentOtp').value;
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/parent/complete-login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ parentPhone: parentLoginPhone, otp: parseInt(otp) })
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showAlert('success', '✅ تم تسجيل الدخول');
+                localStorage.setItem('parent_token', data.token);
+
+                const resultBox = document.getElementById('parentResult');
+                resultBox.innerHTML = `
+                    <h3>✅ تم تسجيل دخول ولي الأمر</h3>
+                    <div class="token-display">
+                        <button class="copy-btn" onclick="copyToClipboard('parentToken')">نسخ</button>
+                        <pre id="parentToken">${data.token.substring(0, 100)}...</pre>
+                    </div>
+                `;
+                resultBox.classList.add('show');
+
+                showSessionWidget({ hasSession: true, role: 'PARENT', phone: parentLoginPhone });
+            } else {
+                showAlert('error', '❌ ' + (data.message || 'فشل تسجيل الدخول'));
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function teacherLogin() {
+        const phone = document.getElementById('teacherPhone').value.trim();
+        const password = document.getElementById('teacherPassword').value;
+
+        if (!phone.match(/^01[0-9]{9}$/)) {
+            showAlert('error', '❌ رقم هاتف غير صحيح');
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/auth/teacher/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, password })
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showAlert('success', '✅ تم تسجيل الدخول');
+                localStorage.setItem('teacher_token', data.token);
+
+                const resultBox = document.getElementById('teacherResult');
+                resultBox.innerHTML = `
+                    <h3>✅ تم تسجيل دخول المعلم</h3>
+                    <div class="token-display">
+                        <button class="copy-btn" onclick="copyToClipboard('teacherToken')">نسخ</button>
+                        <pre id="teacherToken">${data.token.substring(0, 100)}...</pre>
+                    </div>
+                `;
+                resultBox.classList.add('show');
+
+                showSessionWidget({ hasSession: true, role: 'TEACHER', phone });
+            } else {
+                showAlert('error', '❌ ' + (data.message || 'فشل تسجيل الدخول'));
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function forceLogoutAll() {
+        const token = localStorage.getItem('student_token') ||
+                      localStorage.getItem('parent_token') ||
+                      localStorage.getItem('teacher_token');
+
+        if (!token) {
+            showAlert('error', '❌ يجب تسجيل الدخول أولاً');
+            return;
+        }
+
+        if (!confirm('⚠️ تسجيل خروج من جميع الأجهزة؟')) return;
+
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/auth/force-logout-all`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showAlert('success', '✅ ' + data.message);
+                localStorage.clear();
+                hideSessionWidget();
+                backToSelection();
+            } else {
+                showAlert('error', '❌ فشل العملية');
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function refreshToken() {
+        const token = localStorage.getItem('student_token') ||
+                      localStorage.getItem('parent_token') ||
+                      localStorage.getItem('teacher_token');
+
+        if (!token) {
+            showAlert('error', '❌ لا توجد جلسة');
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/auth/refresh`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                showAlert('success', '✅ تم تجديد الجلسة');
+
+                const resultBox = document.getElementById('advancedResult');
+                resultBox.innerHTML = `
+                    <h3>✅ تم تجديد Token</h3>
+                    <div class="token-display">
+                        <button class="copy-btn" onclick="copyToClipboard('refreshedToken')">نسخ</button>
+                        <pre id="refreshedToken">${data.token.substring(0, 100)}...</pre>
+                    </div>
+                `;
+                resultBox.classList.add('show');
+            } else {
+                showAlert('error', '❌ فشل التجديد');
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function checkPhoneStatus() {
+        const phone = document.getElementById('checkPhoneInput').value.trim();
+
+        if (!phone.match(/^01[0-9]{9}$/)) {
+            showAlert('error', '❌ رقم هاتف غير صحيح');
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/auth/check-phone/${phone}`);
+            const data = await response.json();
+            hideLoading();
+
+            const resultBox = document.getElementById('advancedResult');
+            resultBox.innerHTML = `
+                <h3>📱 نتيجة الفحص</h3>
+                <div class="result-item">
+                    <span class="result-label">الحالة:</span>
+                    <span class="result-value">${data.exists ? 'مسجل ✅' : 'غير مسجل ❌'}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">الرسالة:</span>
+                    <span class="result-value">${data.message}</span>
+                </div>
+            `;
+            resultBox.classList.add('show');
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    async function getCurrentUserInfo() {
+        const token = localStorage.getItem('student_token') ||
+                      localStorage.getItem('parent_token') ||
+                      localStorage.getItem('teacher_token');
+
+        if (!token) {
+            showAlert('error', '❌ يجب تسجيل الدخول أولاً');
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch(`${API_URL}/auth/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const data = await response.json();
+            hideLoading();
+
+            if (response.ok) {
+                const resultBox = document.getElementById('advancedResult');
+                let html = '<h3>👤 معلومات المستخدم</h3>';
+
+                for (const [key, value] of Object.entries(data)) {
+                    html += `
+                        <div class="result-item">
+                            <span class="result-label">${key}:</span>
+                            <span class="result-value">${value}</span>
+                        </div>
+                    `;
+                }
+
+                resultBox.innerHTML = html;
+                resultBox.classList.add('show');
+            } else {
+                showAlert('error', '❌ فشل جلب المعلومات');
+            }
+        } catch (error) {
+            hideLoading();
+            showAlert('error', '❌ فشل الاتصال');
+        }
+    }
+
+    function contactSupportWhatsApp() {
+        window.open('https://wa.me/201234567890', '_blank');
+    }
+
+    function showAlert(type, message) {
+        const alert = document.getElementById('alert');
+        alert.className = `alert-box alert-${type} show`;
+        alert.textContent = message;
+        setTimeout(() => alert.classList.remove('show'), 5000);
+    }
+
+    function showLoading() {
+        document.getElementById('loading').classList.add('show');
+    }
+
+    function hideLoading() {
+        document.getElementById('loading').classList.remove('show');
+    }
+
+    function copyToClipboard(elementId) {
+        const text = document.getElementById(elementId).textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            showAlert('success', '✅ تم النسخ');
+        });
+    }
+</script>
+</body>
+</html>
